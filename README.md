@@ -119,6 +119,21 @@ View the HTML test report:
 npm run test:report
 ```
 
+## Continuous Integration
+
+The project includes GitHub Actions workflows for automated test execution:
+
+### Daily Test Execution
+
+- Smoke tests run automatically every day at 9 AM UTC
+- If smoke tests pass, regression tests will run automatically afterward
+- Test results are saved as artifacts for 30 days
+
+### Pull Request Checks
+
+- Smoke tests run automatically on every pull request to main/master branches
+- Test results are saved as artifacts for 7 days
+
 ## License
 
 ISC
