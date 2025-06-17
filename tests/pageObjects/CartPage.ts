@@ -43,8 +43,7 @@ export class CartPage {
     const item = this.cartItems.filter({ hasText: productName });
     const quantityText = await item.locator('.cart_quantity').textContent();
     return quantityText ? parseInt(quantityText.trim()) : 0;
-  }
-  async removeProduct(productName: string) {
+  }  async removeProduct(productName: string) {
     // Find the cart item containing our product and click its remove button
     await this.cartItems
       .filter({ hasText: productName })

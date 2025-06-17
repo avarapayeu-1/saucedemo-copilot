@@ -10,16 +10,15 @@ jobs:
   smoke-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
@@ -29,7 +28,7 @@ jobs:
         
       - name: Upload smoke test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: smoke-test-results
           path: playwright-report/
@@ -42,16 +41,15 @@ jobs:
     if: ${{ needs.smoke-tests.outputs.smoke_tests_result == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
@@ -61,7 +59,7 @@ jobs:
         
       - name: Upload regression test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: regression-test-results
           path: playwright-report/
