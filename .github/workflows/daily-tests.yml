@@ -1,0 +1,68 @@
+name: Daily Test Execution
+
+on:
+  schedule:
+    # Run every morning at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        
+      - name: Run smoke tests
+        run: npm run test:smoke
+        
+      - name: Upload smoke test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: smoke-test-results
+          path: playwright-report/
+          retention-days: 30
+    outputs:
+      smoke_tests_result: ${{ job.status }}
+          
+  regression-tests:
+    needs: smoke-tests
+    if: ${{ needs.smoke-tests.outputs.smoke_tests_result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        
+      - name: Run regression tests
+        run: npm run test:regression
+        
+      - name: Upload regression test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: regression-test-results
+          path: playwright-report/
+          retention-days: 30
